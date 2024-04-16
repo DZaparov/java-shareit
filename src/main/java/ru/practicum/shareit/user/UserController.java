@@ -1,12 +1,63 @@
 package ru.practicum.shareit.user;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.service.UserService;
+
+import javax.validation.Valid;
+import java.util.*;
 
 /**
  * TODO Sprint add-controllers.
  */
 @RestController
 @RequestMapping(path = "/users")
+@Slf4j
 public class UserController {
+    public final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @PostMapping
+    public UserDto createUser(@Valid @RequestBody User user) {
+        UserDto result = userService.createUser(user);
+        log.info("Создан пользователь: {}", result);
+
+        return result;
+    }
+
+    @PatchMapping("/{id}")
+    public UserDto updateUser(@Valid @RequestBody User user, @PathVariable Long id) {
+        UserDto result = userService.updateUser(id, user);
+        log.info("Обновлен пользователь: {}", result);
+
+        return result;
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+
+        log.info("Удален пользователь с id: {}", id);
+    }
+
+    @GetMapping("/{id}")
+    public UserDto getUser(@PathVariable Long id) {
+        UserDto result = userService.getUserById(id);
+        log.info("Получен пользователь: " + result);
+
+        return result;
+    }
+
+    @GetMapping
+    public List<UserDto> listUsers() {
+        List<UserDto> result = userService.listUsers();
+        log.info("Получен список пользователей. Количество: " + result.size());
+
+        return result;
+    }
 }
