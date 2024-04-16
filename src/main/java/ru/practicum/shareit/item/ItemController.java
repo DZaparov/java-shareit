@@ -24,6 +24,7 @@ public class ItemController {
     @PostMapping
     public ItemDto createItem(@Valid @RequestBody ItemDto itemDto,
                               @RequestHeader("X-Sharer-User-Id") Long ownerId) {
+        log.info("Попытка создания вещи: {}, владелец id={}", itemDto, ownerId);
         ItemDto result = itemService.createItem(itemDto, ownerId);
         log.info("Создана вещь: {}", result);
 
@@ -34,6 +35,7 @@ public class ItemController {
     public ItemDto updateUser(@Valid @RequestBody ItemDto itemDto,
                               @PathVariable Long id,
                               @RequestHeader("X-Sharer-User-Id") Long ownerId) {
+        log.info("Попытка обновления вещи {}, id={}, владелец id={}", itemDto, id, ownerId);
         ItemDto result = itemService.updateItem(id, itemDto, ownerId);
         log.info("Обновлена вещь: {}", result);
 
@@ -42,23 +44,26 @@ public class ItemController {
 
     @GetMapping("/{id}")
     public ItemDto getItem(@PathVariable Long id) {
+        log.info("Попытка получения вещи id={}", id);
         ItemDto result = itemService.getItemById(id);
-        log.info("Получена вещь: " + result);
+        log.info("Получена вещь: {}", result);
         return result;
     }
 
     @GetMapping
     public List<ItemDto> listItemsOfUser(@RequestHeader("X-Sharer-User-Id") Long ownerId) {
+        log.info("Попытка получения списка вещей владельца id={}", ownerId);
         List<ItemDto> result = itemService.listItemsOfUser(ownerId);
-        log.info("Получен список вещей. Количество: " + result.size());
+        log.info("Получен список вещей. Количество: {}", result.size());
         return result;
     }
 
     @GetMapping("/search")
     public List<ItemDto> searchItem(@RequestParam String text,
                                     @RequestHeader("X-Sharer-User-Id") Long ownerId) {
+        log.info("Попытка поиска вещи по запросу: {}", text);
         List<ItemDto> result = itemService.searchItem(text);
-        log.info("Получен список вещей. Количество: " + result.size());
+        log.info("Получен список вещей. Количество: {}", result.size());
 
         return result;
     }

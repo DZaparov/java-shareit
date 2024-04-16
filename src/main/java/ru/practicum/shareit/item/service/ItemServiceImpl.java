@@ -66,7 +66,7 @@ public class ItemServiceImpl implements ItemService {
         Item itemToUpdate = itemStorage.getItemById(id);
         Item item = ItemMapper.fillItem(itemDto, itemToUpdate);
 
-        if (ownerId != itemToUpdate.getOwner()) {
+        if (!ownerId.equals(itemToUpdate.getOwner())) {
             throw new ForbiddenException("Вещь может менять только ее владелец");
         }
 

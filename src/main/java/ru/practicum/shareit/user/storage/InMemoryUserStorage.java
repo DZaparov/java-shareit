@@ -5,10 +5,7 @@ import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.NullException;
 import ru.practicum.shareit.user.model.User;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.springframework.stereotype.Component;
 
@@ -52,7 +49,7 @@ public class InMemoryUserStorage implements UserStorage {
             }
 
             if (emails.containsKey(user.getEmail())) { //если такой email есть, то может быть дубликат
-                if (emails.get(user.getEmail()) != id) { //если id юзера в базе не равен id обновляемого юзера
+                if (!Objects.equals(emails.get(user.getEmail()), id)) { //если id юзера в базе не равен id обновляемого юзера
                     throw new DuplicateEmail("Пользователь с таким email существует");
                 }
             }
