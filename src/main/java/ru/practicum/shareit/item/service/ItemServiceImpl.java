@@ -2,8 +2,8 @@ package ru.practicum.shareit.item.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.BlankFieldException;
 import ru.practicum.shareit.exception.ForbiddenException;
-import ru.practicum.shareit.exception.NullException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
@@ -29,24 +29,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto createItem(ItemDto itemDto, Long ownerId) {
         if (ownerId == null) {
-            throw new NullException("Заголовок X-Sharer-User-Id не должен быть пустым");
-        }
-        if (itemDto.getName() == null) {
-            throw new NullException("Поле name не должно быть пустым");
-        } else {
-            if (itemDto.getName().isBlank()) {
-                throw new NullException("Поле name не должно быть пустым");
-            }
-        }
-        if (itemDto.getDescription() == null) {
-            throw new NullException("Поле description не должно быть пустым");
-        } else {
-            if (itemDto.getDescription().isBlank()) {
-                throw new NullException("Поле description не должно быть пустым");
-            }
-        }
-        if (itemDto.getAvailable() == null) {
-            throw new NullException("Поле available не должно быть пустым");
+            throw new BlankFieldException("Заголовок X-Sharer-User-Id не должен быть пустым");
         }
 
         Item item = ItemMapper.toItem(itemDto);
@@ -60,7 +43,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto updateItem(Long id, ItemDto itemDto, Long ownerId) {
         if (ownerId == null) {
-            throw new NullException("Заголовок X-Sharer-User-Id не должен быть пустым");
+            throw new BlankFieldException("Заголовок X-Sharer-User-Id не должен быть пустым");
         }
 
         Item itemToUpdate = itemStorage.getItemById(id);

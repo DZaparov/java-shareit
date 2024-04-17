@@ -2,7 +2,6 @@ package ru.practicum.shareit.user.storage;
 
 import ru.practicum.shareit.exception.DuplicateEmail;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.NullException;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.*;
@@ -17,9 +16,6 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User createUser(User user) {
-        if (user.getEmail() == null) {
-            throw new NullException("Пустой email");
-        }
         if (emails.containsKey(user.getEmail())) {
             throw new DuplicateEmail("Пользователь с таким email существует");
         }

@@ -32,7 +32,7 @@ public class ItemController {
     }
 
     @PatchMapping("/{id}")
-    public ItemDto updateUser(@Valid @RequestBody ItemDto itemDto,
+    public ItemDto updateItem(@RequestBody ItemDto itemDto,
                               @PathVariable Long id,
                               @RequestHeader("X-Sharer-User-Id") Long ownerId) {
         log.info("Попытка обновления вещи {}, id={}, владелец id={}", itemDto, id, ownerId);
