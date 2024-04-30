@@ -6,10 +6,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.practicum.shareit.exception.BlankFieldException;
-import ru.practicum.shareit.exception.DuplicateEmail;
-import ru.practicum.shareit.exception.ForbiddenException;
-import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.exception.*;
 
 @RestControllerAdvice
 @Slf4j
@@ -17,6 +14,34 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST) //400
     public ErrorResponse handleValidationException(final MethodArgumentNotValidException e) {
+        log.info("{} {}", HttpStatus.BAD_REQUEST, e.getMessage());
+        return new ErrorResponse(HttpStatus.BAD_REQUEST.toString(), e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST) //400
+    public ErrorResponse handleNotAvailableException(final NotAvailableException e) {
+        log.info("{} {}", HttpStatus.BAD_REQUEST, e.getMessage());
+        return new ErrorResponse(HttpStatus.BAD_REQUEST.toString(), e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST) //400
+    public ErrorResponse handleBookingDateException(final BookingDateException e) {
+        log.info("{} {}", HttpStatus.BAD_REQUEST, e.getMessage());
+        return new ErrorResponse(HttpStatus.BAD_REQUEST.toString(), e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST) //400
+    public ErrorResponse handleUnsupportedStatusException(final UnsupportedStatusException e) {
+        log.info("{} {}", "Unknown state: UNSUPPORTED_STATUS", e.getMessage());
+        return new ErrorResponse("Unknown state: UNSUPPORTED_STATUS", e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST) //400
+    public ErrorResponse handleApproveRequestException(final ApproveRequestException e) {
         log.info("{} {}", HttpStatus.BAD_REQUEST, e.getMessage());
         return new ErrorResponse(HttpStatus.BAD_REQUEST.toString(), e.getMessage());
     }
