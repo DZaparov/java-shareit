@@ -1,12 +1,11 @@
 package ru.practicum.shareit.user.storage;
 
+import org.springframework.stereotype.Component;
 import ru.practicum.shareit.exception.DuplicateEmail;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.*;
-
-import org.springframework.stereotype.Component;
 
 @Component
 public class InMemoryUserStorage implements UserStorage {

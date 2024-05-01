@@ -7,7 +7,7 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.List;
 
 /**
  * TODO Sprint add-controllers.
