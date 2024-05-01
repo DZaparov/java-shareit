@@ -19,8 +19,7 @@ public class ItemWithBookingDto {
     private String name;
     @NotBlank
     private String description;
-    @NotNull
-    private Boolean available;
+    private boolean available;
     private ItemRequest request;
     private BookingDto lastBooking;
     private BookingDto nextBooking;

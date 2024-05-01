@@ -30,7 +30,7 @@ public class Item {
     private String description;
 
     @Column(name = "is_available")
-    private Boolean available;
+    private boolean available;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
