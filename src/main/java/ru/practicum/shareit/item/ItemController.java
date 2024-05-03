@@ -54,18 +54,22 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemWithBookingDto> listItemsOfUser(@RequestHeader("X-Sharer-User-Id") Long ownerId) {
+    public List<ItemWithBookingDto> listItemsOfUser(@RequestHeader("X-Sharer-User-Id") Long ownerId,
+                                                    @RequestParam(defaultValue = "0") int from,
+                                                    @RequestParam(defaultValue = "10") int size) {
         log.info("Попытка получения списка вещей владельца id={}", ownerId);
-        List<ItemWithBookingDto> result = itemService.listItemsOfUser(ownerId);
+        List<ItemWithBookingDto> result = itemService.listItemsOfUser(ownerId, from, size);
         log.info("Получен список вещей. Количество: {}", result.size());
         return result;
     }
 
     @GetMapping("/search")
     public List<ItemDto> searchItem(@RequestParam String text,
-                                    @RequestHeader("X-Sharer-User-Id") Long ownerId) {
+                                    @RequestHeader("X-Sharer-User-Id") Long ownerId,
+                                    @RequestParam(defaultValue = "0") int from,
+                                    @RequestParam(defaultValue = "10") int size) {
         log.info("Попытка поиска вещи по запросу: {}", text);
-        List<ItemDto> result = itemService.searchItem(text);
+        List<ItemDto> result = itemService.searchItem(text, from, size);
         log.info("Получен список вещей. Количество: {}", result.size());
 
         return result;

@@ -75,6 +75,13 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST) //400
+    public ErrorResponse handleWrongParamException(final WrongParamException e) {
+        log.info("{} {}", HttpStatus.BAD_REQUEST, e.getMessage());
+        return new ErrorResponse(HttpStatus.BAD_REQUEST.toString(), e.getMessage());
+    }
+
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) //500
     public ErrorResponse handleThrowable(final Throwable e) {
         log.info("{} {}", HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());

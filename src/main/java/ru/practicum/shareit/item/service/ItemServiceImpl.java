@@ -1,21 +1,21 @@
 package ru.practicum.shareit.item.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
-import ru.practicum.shareit.exception.BlankFieldException;
-import ru.practicum.shareit.exception.ForbiddenException;
-import ru.practicum.shareit.exception.NotAvailableException;
-import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.CommentRepository;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.ItemRequestRepository;
+import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.model.User;
 
@@ -30,16 +30,19 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+    private final ItemRequestRepository itemRequestRepository;
 
     @Autowired
     public ItemServiceImpl(ItemRepository itemRepository,
                            UserRepository userRepository,
                            BookingRepository bookingRepository,
-                           CommentRepository commentRepository) {
+                           CommentRepository commentRepository,
+                           ItemRequestRepository itemRequestRepository) {
         this.itemRepository = itemRepository;
         this.userRepository = userRepository;
         this.bookingRepository = bookingRepository;
         this.commentRepository = commentRepository;
+        this.itemRequestRepository = itemRequestRepository;
     }
 
     @Override
@@ -48,11 +51,16 @@ public class ItemServiceImpl implements ItemService {
             throw new BlankFieldException("Заголовок X-Sharer-User-Id не должен быть пустым");
         }
 
-        Item item = ItemMapper.toItem(itemDto);
-
         User owner = userRepository.findById(ownerId).orElseThrow(() ->
                 new NotFoundException("Пользователь с идентификатором " + ownerId + " не найден."));
-        item.setOwner(owner);
+
+        ItemRequest request = null;
+        if (itemDto.getRequestId() != null) {
+            request = itemRequestRepository.findById(itemDto.getRequestId()).orElseThrow(() ->
+                    new NotFoundException("Запрос с идентификатором " + itemDto.getRequestId() + " не найден."));
+        }
+
+        Item item = ItemMapper.toItem(itemDto, owner, request);
 
         return ItemMapper.toItemDto(itemRepository.save(item));
     }
@@ -114,8 +122,14 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemWithBookingDto> listItemsOfUser(Long ownerId) {
-        List<Item> items = itemRepository.findAllByOwnerId(ownerId);
+    public List<ItemWithBookingDto> listItemsOfUser(Long ownerId, int from, int size) {
+        if (from < 0 || size < 0) {
+            throw new WrongParamException("Некорректное значение параметров from и size");
+        }
+        PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
+
+        List<Item> items = itemRepository.findAllByOwnerId(ownerId, page)
+                .getContent();
         List<ItemWithBookingDto> result = new ArrayList<>();
 
         for (Item item : items) {
@@ -126,11 +140,16 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> searchItem(String text) {
+    public List<ItemDto> searchItem(String text, int from, int size) {
+        if (from < 0 || size < 0) {
+            throw new WrongParamException("Некорректное значение параметров from и size");
+        }
+        PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
+
         if (text.isBlank()) {
             return new ArrayList<>();
         } else {
-            return itemRepository.searchItem(text)
+            return itemRepository.searchItem(text, page)
                     .stream()
                     .map(ItemMapper::toItemDto)
                     .collect(Collectors.toList());
