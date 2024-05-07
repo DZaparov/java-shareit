@@ -69,10 +69,11 @@ public class BookingServiceImplTest {
 
     @Test
     void createBookingWithWrongDateTest() {
+        LocalDateTime now = LocalDateTime.now();
         User user1 = new User(1L, "Elon", "elon@spacex.com");
         User user2 = new User(2L, "Bill", "bill@microsoft.com");
         Item item = new Item(1L, "Перфоратор", "Мощный инструмент для ремонта", true, user1, null);
-        Booking booking = new Booking(1L, LocalDateTime.now().plusDays(10), LocalDateTime.now().plusDays(7), item, user2, BookingStatus.APPROVED);
+        Booking booking = new Booking(1L, now.plusDays(10), now.plusDays(7), item, user2, BookingStatus.APPROVED);
         BookingDto expectedBookingDto = BookingMapper.toBookingDto(booking);
 
         assertThrows(BookingDateException.class, () -> bookingService.createBooking(expectedBookingDto, user2.getId()));
@@ -81,10 +82,11 @@ public class BookingServiceImplTest {
 
     @Test
     void createBookingWithWrongDateTest2() {
+        LocalDateTime now = LocalDateTime.now();
         User user1 = new User(1L, "Elon", "elon@spacex.com");
         User user2 = new User(2L, "Bill", "bill@microsoft.com");
         Item item = new Item(1L, "Перфоратор", "Мощный инструмент для ремонта", true, user1, null);
-        Booking booking = new Booking(1L, LocalDateTime.now().plusDays(2), LocalDateTime.now().plusDays(2), item, user2, BookingStatus.APPROVED);
+        Booking booking = new Booking(1L, now.plusDays(2), now.plusDays(2), item, user2, BookingStatus.APPROVED);
         BookingDto expectedBookingDto = BookingMapper.toBookingDto(booking);
 
         assertThrows(BookingDateException.class, () -> bookingService.createBooking(expectedBookingDto, user2.getId()));
