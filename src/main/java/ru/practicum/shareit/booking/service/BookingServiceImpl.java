@@ -41,7 +41,7 @@ public class BookingServiceImpl implements BookingService {
         if (userId == null) {
             throw new BlankFieldException("Заголовок X-Sharer-User-Id не должен быть пустым");
         }
-
+log.info("getStart" + bookingDto.getStart() + " - getEnd" + bookingDto.getEnd());
         if (bookingDto.getEnd().isBefore(bookingDto.getStart())) {
             throw new BookingDateException("Дата конца бронирования раньше, чем дата начала бронирования");
         }
