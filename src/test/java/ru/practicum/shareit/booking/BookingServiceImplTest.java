@@ -75,6 +75,9 @@ public class BookingServiceImplTest {
         Booking booking = new Booking(1L, LocalDateTime.now().plusDays(10), LocalDateTime.now().plusDays(7), item, user2, BookingStatus.APPROVED);
         BookingDto expectedBookingDto = BookingMapper.toBookingDto(booking);
 
+        when(userRepository.findById(user2.getId())).thenReturn(Optional.of(user2));
+        when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
+
         assertThrows(BookingDateException.class, () -> bookingService.createBooking(expectedBookingDto, user2.getId()));
         verify(bookingRepository, never()).save(any());
     }
@@ -86,6 +89,9 @@ public class BookingServiceImplTest {
         Item item = new Item(1L, "Перфоратор", "Мощный инструмент для ремонта", true, user1, null);
         Booking booking = new Booking(1L, LocalDateTime.now().plusDays(2), LocalDateTime.now().plusDays(2), item, user2, BookingStatus.APPROVED);
         BookingDto expectedBookingDto = BookingMapper.toBookingDto(booking);
+
+        when(userRepository.findById(user2.getId())).thenReturn(Optional.of(user2));
+        when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
 
         assertThrows(BookingDateException.class, () -> bookingService.createBooking(expectedBookingDto, user2.getId()));
         verify(bookingRepository, never()).save(any());
