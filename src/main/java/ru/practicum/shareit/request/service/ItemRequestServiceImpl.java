@@ -4,17 +4,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.practicum.shareit.exception.BlankFieldException;
-import ru.practicum.shareit.exception.ForbiddenException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.WrongParamException;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.dto.ItemResponseDto;
-import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.ItemRequestRepository;
+import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestMapper;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.UserRepository;
@@ -26,7 +24,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class ItemRequestServiceImpl implements ItemRequestService{
+public class ItemRequestServiceImpl implements ItemRequestService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
     private final ItemRequestRepository itemRequestRepository;
@@ -71,9 +69,9 @@ public class ItemRequestServiceImpl implements ItemRequestService{
 
         List<Item> items = itemRepository.findAllByRequestIdIn(
                 itemRequestsDto
-                .stream()
-                .map(ItemRequestDto::getId)
-                .collect(Collectors.toList()));
+                        .stream()
+                        .map(ItemRequestDto::getId)
+                        .collect(Collectors.toList()));
 
         for (ItemRequestDto itemRequestDto : itemRequestsDto) {
             itemRequestDto.setItems(items

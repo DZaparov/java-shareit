@@ -61,13 +61,6 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT) //409
-    public ErrorResponse handleDuplicateEmail(final DuplicateEmail e) {
-        log.info("{} {}", HttpStatus.CONFLICT, e.getMessage());
-        return new ErrorResponse(HttpStatus.CONFLICT.toString(), e.getMessage());
-    }
-
-    @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST) //400
     public ErrorResponse handleBlankFieldException(final BlankFieldException e) {
         log.info("{} {}", HttpStatus.BAD_REQUEST, e.getMessage());

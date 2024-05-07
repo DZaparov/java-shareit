@@ -17,7 +17,6 @@ import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -105,15 +104,15 @@ public class BookingServiceImpl implements BookingService {
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new NotFoundException("Пользователь с идентификатором " + userId + " не найден."));
 
-        Booking bookingToUpdate = bookingRepository.findById(id).orElseThrow(() ->
+        Booking booking = bookingRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("Бронирование с идентификатором " + id + " не найдено."));
 
-        if (!(userId.equals(bookingToUpdate.getBooker().getId()) ||
-                userId.equals(bookingToUpdate.getItem().getOwner().getId()))) {
-            throw new NotFoundException("Бронирование может менять только его владелец или автор");
+        if (!(userId.equals(booking.getBooker().getId()) ||
+                userId.equals(booking.getItem().getOwner().getId()))) {
+            throw new NotFoundException("Бронирование может посмотреть только его владелец или автор");
         }
 
-        return BookingMapper.toBookingDto(bookingRepository.save(bookingToUpdate));
+        return BookingMapper.toBookingDto(booking);
     }
 
     @Override

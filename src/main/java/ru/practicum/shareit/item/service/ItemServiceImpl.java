@@ -171,9 +171,9 @@ public class ItemServiceImpl implements ItemService {
                 userId,
                 LocalDateTime.now());
 
-        bookings.stream()
-                .findFirst()
-                .orElseThrow(() -> new NotAvailableException("Пользователь не бронировал вещь"));
+        if (bookings.isEmpty()) {
+            throw new NotAvailableException("Пользователь не бронировал вещь");
+        }
 
         Comment comment = CommentMapper.toComment(commentDto, item, user);
         comment.setCreated(LocalDateTime.now());
