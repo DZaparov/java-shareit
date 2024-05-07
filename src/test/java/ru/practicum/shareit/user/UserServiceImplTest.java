@@ -87,9 +87,9 @@ public class UserServiceImplTest {
         User user = new User(1L, "Elon", "elon@spacex.com");
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
-        UserDto UserDto = userService.getUserById(user.getId());
+        UserDto userDto = userService.getUserById(user.getId());
 
-        assertEquals(UserMapper.toUserDto(user), UserDto);
+        assertEquals(UserMapper.toUserDto(user), userDto);
     }
 
     @Test
