@@ -68,6 +68,30 @@ public class BookingServiceImplTest {
     }
 
     @Test
+    void createBookingWithWrongDateTest() {
+        User user1 = new User(1L, "Elon", "elon@spacex.com");
+        User user2 = new User(2L, "Bill", "bill@microsoft.com");
+        Item item = new Item(1L, "Перфоратор", "Мощный инструмент для ремонта", true, user1, null);
+        Booking booking = new Booking(1L, LocalDateTime.now().plusDays(10), LocalDateTime.now().plusDays(7), item, user2, BookingStatus.APPROVED);
+        BookingDto expectedBookingDto = BookingMapper.toBookingDto(booking);
+
+        assertThrows(BookingDateException.class, () -> bookingService.createBooking(expectedBookingDto, user2.getId()));
+        verify(bookingRepository, never()).save(any());
+    }
+
+    @Test
+    void createBookingWithWrongDateTest2() {
+        User user1 = new User(1L, "Elon", "elon@spacex.com");
+        User user2 = new User(2L, "Bill", "bill@microsoft.com");
+        Item item = new Item(1L, "Перфоратор", "Мощный инструмент для ремонта", true, user1, null);
+        Booking booking = new Booking(1L, LocalDateTime.now().plusDays(2), LocalDateTime.now().plusDays(2), item, user2, BookingStatus.APPROVED);
+        BookingDto expectedBookingDto = BookingMapper.toBookingDto(booking);
+
+        assertThrows(BookingDateException.class, () -> bookingService.createBooking(expectedBookingDto, user2.getId()));
+        verify(bookingRepository, never()).save(any());
+    }
+
+    @Test
     void createBookingWithNotAvailableItemTest() {
         User user1 = new User(1L, "Elon", "elon@spacex.com");
         User user2 = new User(2L, "Bill", "bill@microsoft.com");
