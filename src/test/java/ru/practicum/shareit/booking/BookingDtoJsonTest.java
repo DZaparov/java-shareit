@@ -17,7 +17,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 public class BookingDtoJsonTest {
     @Autowired
     private JacksonTester<BookingDto> json;
-    final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_DATE_TIME;
+    final DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 
     @Test
     void testBookingDto() throws Exception {
@@ -38,8 +38,8 @@ public class BookingDtoJsonTest {
         JsonContent<BookingDto> result = json.write(bookingDto);
 
         assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
-        assertThat(result).extractingJsonPathStringValue("$.start").isEqualTo(start.format(FORMATTER));
-        assertThat(result).extractingJsonPathStringValue("$.end").isEqualTo(end.format(FORMATTER));
+        assertThat(result).extractingJsonPathStringValue("$.start").isEqualTo(start.format(formatter));
+        assertThat(result).extractingJsonPathStringValue("$.end").isEqualTo(end.format(formatter));
         assertThat(result).extractingJsonPathNumberValue("$.itemId").isEqualTo(2);
         assertThat(result).extractingJsonPathNumberValue("$.bookerId").isEqualTo(3);
         assertThat(result).extractingJsonPathStringValue("$.status").isEqualTo(BookingStatus.WAITING.toString());
