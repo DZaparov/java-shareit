@@ -8,7 +8,10 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
-import ru.practicum.shareit.exception.*;
+import ru.practicum.shareit.exception.BlankFieldException;
+import ru.practicum.shareit.exception.ForbiddenException;
+import ru.practicum.shareit.exception.NotAvailableException;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.CommentRepository;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.dto.*;
@@ -123,9 +126,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemWithBookingDto> listItemsOfUser(Long ownerId, int from, int size) {
-        if (from < 0 || size < 0) {
-            throw new WrongParamException("Некорректное значение параметров from и size");
-        }
         PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
 
         List<Item> items = itemRepository.findAllByOwnerId(ownerId, page)
@@ -141,9 +141,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> searchItem(String text, int from, int size) {
-        if (from < 0 || size < 0) {
-            throw new WrongParamException("Некорректное значение параметров from и size");
-        }
         PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
 
         if (text.isBlank()) {

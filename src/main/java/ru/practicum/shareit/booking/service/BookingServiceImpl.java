@@ -41,7 +41,7 @@ public class BookingServiceImpl implements BookingService {
         if (userId == null) {
             throw new BlankFieldException("Заголовок X-Sharer-User-Id не должен быть пустым");
         }
-log.info("getStart" + bookingDto.getStart() + " - getEnd" + bookingDto.getEnd());
+
         if (bookingDto.getEnd().isBefore(bookingDto.getStart())) {
             throw new BookingDateException("Дата конца бронирования раньше, чем дата начала бронирования");
         }
@@ -117,9 +117,6 @@ log.info("getStart" + bookingDto.getStart() + " - getEnd" + bookingDto.getEnd())
 
     @Override
     public List<BookingDto> getUserBookings(Long bookerId, String state, int from, int size) {
-        if (from < 0 || size < 0) {
-            throw new WrongParamException("Некорректное значение параметров from и size");
-        }
         PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
 
         User booker = userRepository.findById(bookerId).orElseThrow(() ->
@@ -156,9 +153,6 @@ log.info("getStart" + bookingDto.getStart() + " - getEnd" + bookingDto.getEnd())
 
     @Override
     public List<BookingDto> getOwnerBookings(Long ownerId, String state, int from, int size) {
-        if (from < 0 || size < 0) {
-            throw new WrongParamException("Некорректное значение параметров from и size");
-        }
         PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
 
         User owner = userRepository.findById(ownerId).orElseThrow(() ->

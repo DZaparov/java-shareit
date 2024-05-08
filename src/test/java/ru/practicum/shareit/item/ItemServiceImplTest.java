@@ -16,7 +16,6 @@ import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.exception.BlankFieldException;
 import ru.practicum.shareit.exception.ForbiddenException;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.WrongParamException;
 import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemServiceImpl;
@@ -239,11 +238,6 @@ public class ItemServiceImplTest {
         List<ItemWithBookingDto> result = itemService.listItemsOfUser(user.getId(), 0, 10);
 
         assertEquals(expected, result);
-    }
-
-    @Test
-    void getListItemsOfUserWithWrongParamsTest() {
-        assertThrows(WrongParamException.class, () -> itemService.listItemsOfUser(1L, -1, 10));
     }
 
     @Test

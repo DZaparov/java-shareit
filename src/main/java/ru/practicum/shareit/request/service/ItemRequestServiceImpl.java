@@ -6,7 +6,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.BlankFieldException;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.WrongParamException;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.dto.ItemResponseDto;
@@ -86,10 +85,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public List<ItemRequestDto> getUserItemRequests(Long requestorId, int from, int size) {
-        if (from < 0 || size < 0) {
-            throw new WrongParamException("Некорректное значение параметров from и size");
-        }
-
         PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
         List<ItemRequestDto> itemRequestsDto = itemRequestRepository.findAllByRequestorIdNotLike(requestorId, page)
                 .filter(itemRequest -> !itemRequest.getRequestor().getId().equals(requestorId))

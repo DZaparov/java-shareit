@@ -367,11 +367,6 @@ public class BookingServiceImplTest {
     }
 
     @Test
-    void getUserBookingsWithWrongParamsTest() {
-        assertThrows(WrongParamException.class, () -> bookingService.getUserBookings(1L, "ALL", -1, 10));
-    }
-
-    @Test
     void getOwnerBookingsWithAllStateTest() {
         User user = new User(1L, "Elon", "elon@spacex.com");
         Item item1 = new Item(1L, "Перфоратор", "Мощный инструмент для ремонта", true, null);
@@ -508,10 +503,5 @@ public class BookingServiceImplTest {
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
         assertThrows(UnsupportedStatusException.class, () -> bookingService.getOwnerBookings(user.getId(), "GOOD", 0, 10));
-    }
-
-    @Test
-    void getOwnerBookingsWithWrongParamsTest() {
-        assertThrows(WrongParamException.class, () -> bookingService.getOwnerBookings(1L, "ALL", -1, 10));
     }
 }

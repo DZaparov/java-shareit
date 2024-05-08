@@ -10,7 +10,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.exception.BlankFieldException;
 import ru.practicum.shareit.exception.ForbiddenException;
 import ru.practicum.shareit.exception.NotAvailableException;
-import ru.practicum.shareit.exception.WrongParamException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemWithBookingDto;
@@ -157,16 +156,6 @@ public class ItemControllerTest {
                         .header("X-Sharer-User-Id", 1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()", is(1)));
-    }
-
-    @Test
-    void searchItemWithWrongParamTest() throws Exception {
-        when(itemService.searchItem(anyString(), anyInt(), anyInt())).thenThrow(WrongParamException.class);
-
-        mvc.perform(get("/items/search")
-                        .param("text", "текст")
-                        .header("X-Sharer-User-Id", 1))
-                .andExpect(status().isBadRequest());
     }
 
     @Test
