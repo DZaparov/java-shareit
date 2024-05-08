@@ -16,7 +16,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 public class ItemRequestDtoTest {
     @Autowired
     private JacksonTester<ItemRequestDto> json;
-    final DateTimeFormatter ISO_FORMATTER = DateTimeFormatter.ISO_DATE_TIME;
+    final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_DATE_TIME;
 
     @Test
     void testItemDto() throws Exception {
@@ -33,6 +33,6 @@ public class ItemRequestDtoTest {
 
         assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
         assertThat(result).extractingJsonPathStringValue("$.description").isEqualTo("Нужен шпатель");
-        assertThat(result).extractingJsonPathStringValue("$.created").isEqualTo(created.format(ISO_FORMATTER));
+        assertThat(result).extractingJsonPathStringValue("$.created").isEqualTo(created.format(FORMATTER));
     }
 }
