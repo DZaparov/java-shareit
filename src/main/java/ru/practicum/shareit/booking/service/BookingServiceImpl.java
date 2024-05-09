@@ -2,6 +2,8 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.dto.BookingDto;
@@ -15,7 +17,6 @@ import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -103,40 +104,42 @@ public class BookingServiceImpl implements BookingService {
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new NotFoundException("Пользователь с идентификатором " + userId + " не найден."));
 
-        Booking bookingToUpdate = bookingRepository.findById(id).orElseThrow(() ->
+        Booking booking = bookingRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("Бронирование с идентификатором " + id + " не найдено."));
 
-        if (!(userId.equals(bookingToUpdate.getBooker().getId()) ||
-                userId.equals(bookingToUpdate.getItem().getOwner().getId()))) {
-            throw new NotFoundException("Бронирование может менять только его владелец или автор");
+        if (!(userId.equals(booking.getBooker().getId()) ||
+                userId.equals(booking.getItem().getOwner().getId()))) {
+            throw new NotFoundException("Бронирование может посмотреть только его владелец или автор");
         }
 
-        return BookingMapper.toBookingDto(bookingRepository.save(bookingToUpdate));
+        return BookingMapper.toBookingDto(booking);
     }
 
     @Override
-    public List<BookingDto> getUserBookings(Long bookerId, String state) {
+    public List<BookingDto> getUserBookings(Long bookerId, String state, int from, int size) {
+        PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
+
         User booker = userRepository.findById(bookerId).orElseThrow(() ->
                 new NotFoundException("Пользователь с идентификатором " + bookerId + " не найден."));
 
-        List<Booking> bookings;
+        Page<Booking> bookings;
         LocalDateTime now = LocalDateTime.now();
         switch (state) {
             case "ALL":
-                bookings = bookingRepository.findByBookerIdOrderByEndDesc(bookerId);
+                bookings = bookingRepository.findByBookerIdOrderByEndDesc(bookerId, page);
                 break;
             case "CURRENT":
-                bookings = bookingRepository.findByBookerIdAndStartIsBeforeAndEndIsAfterOrderByEndDesc(bookerId, now, now);
+                bookings = bookingRepository.findByBookerIdAndStartIsBeforeAndEndIsAfterOrderByEndDesc(bookerId, now, now, page);
                 break;
             case "PAST":
-                bookings = bookingRepository.findByBookerIdAndEndIsBeforeOrderByEndDesc(bookerId, now);
+                bookings = bookingRepository.findByBookerIdAndEndIsBeforeOrderByEndDesc(bookerId, now, page);
                 break;
             case "FUTURE":
-                bookings = bookingRepository.findByBookerIdAndStartIsAfterOrderByEndDesc(bookerId, now);
+                bookings = bookingRepository.findByBookerIdAndStartIsAfterOrderByEndDesc(bookerId, now, page);
                 break;
             case "WAITING":
             case "REJECTED":
-                bookings = bookingRepository.findByBookerIdAndStatusOrderByEndDesc(bookerId, BookingStatus.valueOf(state));
+                bookings = bookingRepository.findByBookerIdAndStatusOrderByEndDesc(bookerId, BookingStatus.valueOf(state), page);
                 break;
             default:
                 throw new UnsupportedStatusException("Такой статус не поддерживается");
@@ -149,28 +152,30 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getOwnerBookings(Long ownerId, String state) {
+    public List<BookingDto> getOwnerBookings(Long ownerId, String state, int from, int size) {
+        PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
+
         User owner = userRepository.findById(ownerId).orElseThrow(() ->
                 new NotFoundException("Пользователь с идентификатором " + ownerId + " не найден."));
 
-        List<Booking> bookings = new ArrayList<>();
+        Page<Booking> bookings;
         LocalDateTime now = LocalDateTime.now();
         switch (state) {
             case "ALL":
-                bookings = bookingRepository.findByItemOwnerIdOrderByEndDesc(ownerId);
+                bookings = bookingRepository.findByItemOwnerIdOrderByEndDesc(ownerId, page);
                 break;
             case "CURRENT":
-                bookings = bookingRepository.findByItemOwnerIdAndStartIsBeforeAndEndIsAfterOrderByEndDesc(ownerId, now, now);
+                bookings = bookingRepository.findByItemOwnerIdAndStartIsBeforeAndEndIsAfterOrderByEndDesc(ownerId, now, now, page);
                 break;
             case "PAST":
-                bookings = bookingRepository.findByItemOwnerIdAndEndIsBeforeOrderByEndDesc(ownerId, now);
+                bookings = bookingRepository.findByItemOwnerIdAndEndIsBeforeOrderByEndDesc(ownerId, now, page);
                 break;
             case "FUTURE":
-                bookings = bookingRepository.findByItemOwnerIdAndStartIsAfterOrderByEndDesc(ownerId, now);
+                bookings = bookingRepository.findByItemOwnerIdAndStartIsAfterOrderByEndDesc(ownerId, now, page);
                 break;
             case "WAITING":
             case "REJECTED":
-                bookings = bookingRepository.findByItemOwnerIdAndStatusOrderByEndDesc(ownerId, BookingStatus.valueOf(state));
+                bookings = bookingRepository.findByItemOwnerIdAndStatusOrderByEndDesc(ownerId, BookingStatus.valueOf(state), page);
                 break;
             default:
                 throw new UnsupportedStatusException("Такой статус не поддерживается");

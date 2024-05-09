@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.shareit.exception.*;
 
+import javax.validation.ConstraintViolationException;
+
 @RestControllerAdvice
 @Slf4j
 public class ErrorHandler {
@@ -61,15 +63,15 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT) //409
-    public ErrorResponse handleDuplicateEmail(final DuplicateEmail e) {
-        log.info("{} {}", HttpStatus.CONFLICT, e.getMessage());
-        return new ErrorResponse(HttpStatus.CONFLICT.toString(), e.getMessage());
+    @ResponseStatus(HttpStatus.BAD_REQUEST) //400
+    public ErrorResponse handleBlankFieldException(final BlankFieldException e) {
+        log.info("{} {}", HttpStatus.BAD_REQUEST, e.getMessage());
+        return new ErrorResponse(HttpStatus.BAD_REQUEST.toString(), e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST) //400
-    public ErrorResponse handleBlankFieldException(final BlankFieldException e) {
+    public ErrorResponse handleConstraintViolationException(final ConstraintViolationException e) {
         log.info("{} {}", HttpStatus.BAD_REQUEST, e.getMessage());
         return new ErrorResponse(HttpStatus.BAD_REQUEST.toString(), e.getMessage());
     }

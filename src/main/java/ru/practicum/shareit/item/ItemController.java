@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -8,11 +9,14 @@ import ru.practicum.shareit.item.dto.ItemWithBookingDto;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 /**
  * TODO Sprint add-controllers.
  */
+@Validated
 @RestController
 @RequestMapping("/items")
 @Slf4j
@@ -54,18 +58,22 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemWithBookingDto> listItemsOfUser(@RequestHeader("X-Sharer-User-Id") Long ownerId) {
+    public List<ItemWithBookingDto> listItemsOfUser(@RequestHeader("X-Sharer-User-Id") Long ownerId,
+                                                    @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                                    @RequestParam(defaultValue = "10") @Positive int size) {
         log.info("Попытка получения списка вещей владельца id={}", ownerId);
-        List<ItemWithBookingDto> result = itemService.listItemsOfUser(ownerId);
+        List<ItemWithBookingDto> result = itemService.listItemsOfUser(ownerId, from, size);
         log.info("Получен список вещей. Количество: {}", result.size());
         return result;
     }
 
     @GetMapping("/search")
     public List<ItemDto> searchItem(@RequestParam String text,
-                                    @RequestHeader("X-Sharer-User-Id") Long ownerId) {
+                                    @RequestHeader("X-Sharer-User-Id") Long ownerId,
+                                    @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                    @RequestParam(defaultValue = "10") @Positive int size) {
         log.info("Попытка поиска вещи по запросу: {}", text);
-        List<ItemDto> result = itemService.searchItem(text);
+        List<ItemDto> result = itemService.searchItem(text, from, size);
         log.info("Получен список вещей. Количество: {}", result.size());
 
         return result;

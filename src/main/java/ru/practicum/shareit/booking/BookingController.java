@@ -1,16 +1,20 @@
 package ru.practicum.shareit.booking;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.service.BookingService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 /**
  * TODO Sprint add-bookings.
  */
+@Validated
 @RestController
 @RequestMapping(path = "/bookings")
 @Slf4j
@@ -56,10 +60,12 @@ public class BookingController {
 
     @GetMapping
     public List<BookingDto> getUserBookings(@RequestParam(defaultValue = "ALL") String state,
-                                            @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                            @RequestHeader("X-Sharer-User-Id") Long userId,
+                                            @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                            @RequestParam(defaultValue = "10") @Positive int size) {
         log.info("Попытка получения списка всех бронирований текущего пользователя id=: {}, статус={}",
                 userId, state);
-        List<BookingDto> result = bookingService.getUserBookings(userId, state);
+        List<BookingDto> result = bookingService.getUserBookings(userId, state, from, size);
         log.info("Получен список: {}", result);
 
         return result;
@@ -67,10 +73,12 @@ public class BookingController {
 
     @GetMapping("/owner")
     public List<BookingDto> getOwnerBookings(@RequestParam(defaultValue = "ALL") String state,
-                                             @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                             @RequestHeader("X-Sharer-User-Id") Long userId,
+                                             @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                             @RequestParam(defaultValue = "10") @Positive int size) {
         log.info("Попытка получения списка всех бронирований владельца id=: {}, статус={}",
                 userId, state);
-        List<BookingDto> result = bookingService.getOwnerBookings(userId, state);
+        List<BookingDto> result = bookingService.getOwnerBookings(userId, state, from, size);
         log.info("Получен список: {}", result);
 
         return result;
