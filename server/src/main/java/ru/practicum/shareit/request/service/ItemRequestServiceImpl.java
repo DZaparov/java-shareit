@@ -86,7 +86,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public List<ItemRequestDto> getUserItemRequests(Long requestorId, int from, int size) {
         PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
-        List<ItemRequestDto> itemRequestsDto = itemRequestRepository.findAllByRequestorIdNotLike(requestorId, page)
+        List<ItemRequestDto> itemRequestsDto = itemRequestRepository.findAllByRequestorIdNot(requestorId, page)
                 .filter(itemRequest -> !itemRequest.getRequestor().getId().equals(requestorId))
                 .map(ItemRequestMapper::toItemRequestDto)
                 .toList();

@@ -8,15 +8,13 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.client.BaseClient;
-import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 
-import java.util.List;
 import java.util.Map;
 
 @Service
 public class ItemRequestClient extends BaseClient {
-private static final String API_PREFIX = "/requests";
+    private static final String API_PREFIX = "/requests";
 
     @Autowired
     public ItemRequestClient(@Value("${shareit-server.url}") String serverUrl, RestTemplateBuilder builder) {
@@ -28,8 +26,8 @@ private static final String API_PREFIX = "/requests";
         );
     }
 
-    public ResponseEntity<Object> createItemRequest(ItemRequestDto itemRequestDto, Long ownerId){
-        return post("", ownerId ,itemRequestDto);
+    public ResponseEntity<Object> createItemRequest(ItemRequestDto itemRequestDto, Long ownerId) {
+        return post("", ownerId, itemRequestDto);
     }
 
 

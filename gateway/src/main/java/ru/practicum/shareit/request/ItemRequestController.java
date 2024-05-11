@@ -9,7 +9,6 @@ import ru.practicum.shareit.request.dto.ItemRequestDto;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-import java.util.List;
 
 @Validated
 @RestController
@@ -24,7 +23,7 @@ public class ItemRequestController {
 
     @PostMapping
     public ResponseEntity<Object> createItemRequest(@Valid @RequestBody ItemRequestDto itemRequestDto,
-                                            @RequestHeader("X-Sharer-User-Id") Long ownerId) {
+                                                    @RequestHeader("X-Sharer-User-Id") Long ownerId) {
         log.info("Попытка создания запроса на создание запроса: {}, владелец id={}", itemRequestDto, ownerId);
         ResponseEntity<Object> result = itemRequestService.createItemRequest(itemRequestDto, ownerId);
         log.info("Создан запрос создания запроса: {}", result);
@@ -42,8 +41,8 @@ public class ItemRequestController {
 
     @GetMapping("/all")
     public ResponseEntity<Object> getUserItemRequests(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                                    @RequestParam(defaultValue = "0") @PositiveOrZero int from,
-                                                    @RequestParam(defaultValue = "10") @Positive int size) {
+                                                      @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                                      @RequestParam(defaultValue = "10") @Positive int size) {
         log.info("Попытка создания запроса на получение запроса пользователя id={}", userId);
         ResponseEntity<Object> result = itemRequestService.getUserItemRequests(userId, from, size);
         log.info("Создан запрос на получение запроса пользователя: {}", result);
@@ -52,7 +51,7 @@ public class ItemRequestController {
 
     @GetMapping("/{requestId}")
     public ResponseEntity<Object> getItemRequestById(@PathVariable Long requestId,
-                                             @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                                     @RequestHeader("X-Sharer-User-Id") Long userId) {
         log.info("Попытка создания запроса на получение запроса id={}", requestId);
         ResponseEntity<Object> result = itemRequestService.getItemRequestById(requestId, userId);
         log.info("Создан запрос на получение запроса: {}", result);

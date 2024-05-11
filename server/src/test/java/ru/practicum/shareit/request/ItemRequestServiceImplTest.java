@@ -163,7 +163,7 @@ public class ItemRequestServiceImplTest {
         itemRequestsDto.add(itemRequestDto1);
         itemRequestsDto.add(itemRequestDto2);
 
-        when(itemRequestRepository.findAllByRequestorIdNotLike(anyLong(), any(Pageable.class))).thenReturn(itemRequestsPage);
+        when(itemRequestRepository.findAllByRequestorIdNot(anyLong(), any(Pageable.class))).thenReturn(itemRequestsPage);
         when(itemRepository.findAllByRequestIdIn(anyList())).thenReturn(items);
 
         List<ItemRequestDto> result = itemRequestService.getUserItemRequests(user1.getId(), 0, 10);

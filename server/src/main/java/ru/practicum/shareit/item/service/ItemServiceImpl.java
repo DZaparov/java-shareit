@@ -24,6 +24,7 @@ import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -136,6 +137,10 @@ public class ItemServiceImpl implements ItemService {
             result.add(getItemById(item.getId(), ownerId));
         }
 
+        ItemNextBookingComparator comparator = new ItemNextBookingComparator();
+
+        result.sort(comparator);
+
         return result;
     }
 
@@ -176,5 +181,15 @@ public class ItemServiceImpl implements ItemService {
         comment.setCreated(LocalDateTime.now());
 
         return CommentMapper.toCommentDto(commentRepository.save(comment));
+    }
+
+    static class ItemNextBookingComparator implements Comparator<ItemWithBookingDto> {
+        @Override
+        public int compare(ItemWithBookingDto item1, ItemWithBookingDto item2) {
+            if (item1.getNextBooking() == null && item2.getNextBooking() == null) return 0;
+            if (item1.getNextBooking() == null) return 1;
+            if (item2.getNextBooking() == null) return -1;
+            return (item1.getNextBooking().getStart().compareTo(item2.getNextBooking().getStart()));
+        }
     }
 }

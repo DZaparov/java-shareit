@@ -5,13 +5,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookItemRequestDto;
-import ru.practicum.shareit.booking.BookingClient;
 import ru.practicum.shareit.booking.dto.BookingState;
+import ru.practicum.shareit.exception.UnsupportedStatusException;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-import java.util.List;
 
 @Validated
 @RestController
@@ -26,7 +25,7 @@ public class BookingController {
 
     @PostMapping
     public ResponseEntity<Object> createBooking(@Valid @RequestBody BookItemRequestDto bookingDto,
-                                        @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                                @RequestHeader("X-Sharer-User-Id") Long userId) {
         log.info("Попытка создания запроса на создание бронирования: {}, владелец id={}", bookingDto, userId);
         ResponseEntity<Object> result = bookingService.bookItem(userId, bookingDto);
         log.info("Создан запрос создания бронирования: {}", result);
@@ -36,8 +35,8 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     public ResponseEntity<Object> approveBooking(@PathVariable Long bookingId,
-                                     @RequestParam Boolean approved,
-                                     @RequestHeader("X-Sharer-User-Id") Long ownerId) {
+                                                 @RequestParam Boolean approved,
+                                                 @RequestHeader("X-Sharer-User-Id") Long ownerId) {
         log.info("Попытка создания запроса на изменение статуса подтверждения на {} бронирования id=: {}, владелец id={}",
                 approved, bookingId, ownerId);
         ResponseEntity<Object> result = bookingService.approveBooking(bookingId, ownerId, approved);
@@ -48,7 +47,7 @@ public class BookingController {
 
     @GetMapping("/{bookingId}")
     public ResponseEntity<Object> getBookingById(@PathVariable Long bookingId,
-                                     @RequestHeader("X-Sharer-User-Id") Long userId) {
+                                                 @RequestHeader("X-Sharer-User-Id") Long userId) {
         log.info("Попытка создания запроса на получение бронирования id=: {}, пользователем id={}",
                 bookingId, userId);
         ResponseEntity<Object> result = bookingService.getBooking(userId, bookingId);
@@ -58,26 +57,30 @@ public class BookingController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> getUserBookings(@RequestParam(defaultValue = "ALL") BookingState state,
-                                            @RequestHeader("X-Sharer-User-Id") Long userId,
-                                            @RequestParam(defaultValue = "0") @PositiveOrZero int from,
-                                            @RequestParam(defaultValue = "10") @Positive int size) {
+    public ResponseEntity<Object> getUserBookings(@RequestParam(defaultValue = "ALL") String state,
+                                                  @RequestHeader("X-Sharer-User-Id") Long userId,
+                                                  @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                                  @RequestParam(defaultValue = "10") @Positive int size) {
         log.info("Попытка создания запроса на получение списка всех бронирований текущего пользователя id=: {}, статус={}",
                 userId, state);
-        ResponseEntity<Object> result = bookingService.getBookings(userId, state, from, size);
+        BookingState bookingState = BookingState.from(state)
+                .orElseThrow(() -> new UnsupportedStatusException("Такой статус не поддерживается"));
+        ResponseEntity<Object> result = bookingService.getBookings(userId, bookingState, from, size);
         log.info("Создан запрос на получение списка: {}", result);
 
         return result;
     }
 
     @GetMapping("/owner")
-    public ResponseEntity<Object> getOwnerBookings(@RequestParam(defaultValue = "ALL") BookingState state,
-                                             @RequestHeader("X-Sharer-User-Id") Long userId,
-                                             @RequestParam(defaultValue = "0") @PositiveOrZero int from,
-                                             @RequestParam(defaultValue = "10") @Positive int size) {
+    public ResponseEntity<Object> getOwnerBookings(@RequestParam(defaultValue = "ALL") String state,
+                                                   @RequestHeader("X-Sharer-User-Id") Long userId,
+                                                   @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                                   @RequestParam(defaultValue = "10") @Positive int size) {
         log.info("Попытка создания запроса на получение списка всех бронирований владельца id=: {}, статус={}",
                 userId, state);
-        ResponseEntity<Object> result = bookingService.getOwnerBookings(userId, state, from, size);
+        BookingState bookingState = BookingState.from(state)
+                .orElseThrow(() -> new UnsupportedStatusException("Такой статус не поддерживается"));
+        ResponseEntity<Object> result = bookingService.getOwnerBookings(userId, bookingState, from, size);
         log.info("Создан запрос на получение списка: {}", result);
 
         return result;

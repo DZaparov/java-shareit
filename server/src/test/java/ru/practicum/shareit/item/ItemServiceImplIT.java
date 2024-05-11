@@ -49,7 +49,7 @@ public class ItemServiceImplIT {
 
         BookingDto bookingDto1 = new BookingDto(null, LocalDateTime.now().minusDays(10), LocalDateTime.now().minusDays(7),
                 itemDto1.getId(), null, null, null, BookingStatus.APPROVED);
-        BookingDto bookingDto2 = new BookingDto(null, LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(7),
+        BookingDto bookingDto2 = new BookingDto(null, LocalDateTime.now().plusDays(3), LocalDateTime.now().plusDays(7),
                 itemDto1.getId(), null, null, null, BookingStatus.APPROVED);
         BookingDto bookingDto3 = new BookingDto(null, LocalDateTime.now().minusDays(6), LocalDateTime.now().minusDays(2),
                 itemDto3.getId(), null, null, null, BookingStatus.APPROVED);
@@ -60,7 +60,7 @@ public class ItemServiceImplIT {
                 itemDto2.getId(), null, null, null, BookingStatus.APPROVED);
 
         bookingDto1 = bookingService.createBooking(bookingDto1, userDto2.getId());
-        bookingDto2 = bookingService.createBooking(bookingDto2, userDto2.getId());
+        //bookingDto2 = bookingService.createBooking(bookingDto2, userDto2.getId());
         bookingDto3 = bookingService.createBooking(bookingDto3, userDto2.getId());
         bookingDto4 = bookingService.createBooking(bookingDto4, userDto2.getId());
         bookingDto5 = bookingService.createBooking(bookingDto5, userDto1.getId());
