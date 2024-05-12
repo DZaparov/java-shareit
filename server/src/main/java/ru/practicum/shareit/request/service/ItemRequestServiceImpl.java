@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.BlankFieldException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.dto.ItemMapper;
@@ -38,10 +37,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public ItemRequestDto createItemRequest(ItemRequestDto itemRequestDto, Long requestorId) {
-        if (requestorId == null) {
-            throw new BlankFieldException("Заголовок X-Sharer-User-Id не должен быть пустым");
-        }
-
         User owner = userRepository.findById(requestorId).orElseThrow(() ->
                 new NotFoundException("Пользователь с идентификатором " + requestorId + " не найден."));
 
@@ -53,10 +48,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public List<ItemRequestDto> getMyItemRequests(Long requestorId) {
-        if (requestorId == null) {
-            throw new BlankFieldException("Заголовок X-Sharer-User-Id не должен быть пустым");
-        }
-
         User owner = userRepository.findById(requestorId).orElseThrow(() ->
                 new NotFoundException("Пользователь с идентификатором " + requestorId + " не найден."));
 
@@ -110,10 +101,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public ItemRequestDto getItemRequestById(Long id, Long userId) {
-        if (userId == null) {
-            throw new BlankFieldException("Заголовок X-Sharer-User-Id не должен быть пустым");
-        }
-
         User owner = userRepository.findById(userId).orElseThrow(() ->
                 new NotFoundException("Пользователь с идентификатором " + userId + " не найден."));
 

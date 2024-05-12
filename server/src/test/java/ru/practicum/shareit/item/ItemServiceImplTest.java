@@ -13,7 +13,6 @@ import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
-import ru.practicum.shareit.exception.BlankFieldException;
 import ru.practicum.shareit.exception.ForbiddenException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.*;
@@ -64,13 +63,6 @@ public class ItemServiceImplTest {
 
         assertEquals(ItemMapper.toItemDto(expectedItem), createdItemDto);
         verify(itemRepository, Mockito.times(1)).save(expectedItem);
-    }
-
-    @Test
-    void createItemWithBlankFieldTest() {
-        ItemDto itemDto = new ItemDto(1L, "Перфоратор", "Мощный инструмент для ремонта", true, null, null);
-        assertThrows(BlankFieldException.class, () -> itemService.createItem(itemDto, null));
-        verify(itemRepository, never()).save(any());
     }
 
     @Test
@@ -130,13 +122,6 @@ public class ItemServiceImplTest {
 
         assertEquals(ItemMapper.toItemDto(expectedItem), updatedItemDto);
         verify(itemRepository, Mockito.times(1)).save(expectedItem);
-    }
-
-    @Test
-    void updateItemWithBlankFieldTest() {
-        ItemDto itemDto = new ItemDto(1L, "Перфоратор", "Мощный инструмент для ремонта", true, null, null);
-        assertThrows(BlankFieldException.class, () -> itemService.updateItem(1L, itemDto, null));
-        verify(itemRepository, never()).save(any());
     }
 
     @Test

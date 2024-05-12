@@ -11,7 +11,6 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.exception.ApproveRequestException;
-import ru.practicum.shareit.exception.BookingDateException;
 import ru.practicum.shareit.exception.UnsupportedStatusException;
 
 import java.nio.charset.StandardCharsets;
@@ -59,19 +58,6 @@ public class BookingControllerTest {
                         .header("X-Sharer-User-Id", 1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(bookingDto.getId()), Long.class));
-    }
-
-    @Test
-    void createBookingWithWrongDateTest() throws Exception {
-        when(bookingService.createBooking(any(), anyLong())).thenThrow(BookingDateException.class);
-
-        mvc.perform(post("/bookings")
-                        .content(mapper.writeValueAsString(bookingDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", 1))
-                .andExpect(status().isBadRequest());
     }
 
     @Test

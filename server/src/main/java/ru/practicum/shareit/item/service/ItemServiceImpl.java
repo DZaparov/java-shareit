@@ -8,7 +8,6 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
-import ru.practicum.shareit.exception.BlankFieldException;
 import ru.practicum.shareit.exception.ForbiddenException;
 import ru.practicum.shareit.exception.NotAvailableException;
 import ru.practicum.shareit.exception.NotFoundException;
@@ -51,10 +50,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto createItem(ItemDto itemDto, Long ownerId) {
-        if (ownerId == null) {
-            throw new BlankFieldException("Заголовок X-Sharer-User-Id не должен быть пустым");
-        }
-
         User owner = userRepository.findById(ownerId).orElseThrow(() ->
                 new NotFoundException("Пользователь с идентификатором " + ownerId + " не найден."));
 
@@ -71,9 +66,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto updateItem(Long id, ItemDto itemDto, Long ownerId) {
-        if (ownerId == null) {
-            throw new BlankFieldException("Заголовок X-Sharer-User-Id не должен быть пустым");
-        }
         User user = userRepository.findById(ownerId).orElseThrow(() ->
                 new NotFoundException("Пользователь с идентификатором " + ownerId + " не найден."));
 

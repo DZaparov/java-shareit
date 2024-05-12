@@ -62,38 +62,6 @@ public class BookingServiceImplTest {
     }
 
     @Test
-    void createBookingWithBlankFieldTest() {
-        assertThrows(BlankFieldException.class, () -> bookingService.createBooking(new BookingDto(), null));
-        verify(bookingRepository, never()).save(any());
-    }
-
-    @Test
-    void createBookingWithWrongDateTest() {
-        LocalDateTime now = LocalDateTime.now();
-        User user1 = new User(1L, "Elon", "elon@spacex.com");
-        User user2 = new User(2L, "Bill", "bill@microsoft.com");
-        Item item = new Item(1L, "Перфоратор", "Мощный инструмент для ремонта", true, user1, null);
-        Booking booking = new Booking(1L, now.plusDays(10), now.plusDays(7), item, user2, BookingStatus.APPROVED);
-        BookingDto expectedBookingDto = BookingMapper.toBookingDto(booking);
-
-        assertThrows(BookingDateException.class, () -> bookingService.createBooking(expectedBookingDto, user2.getId()));
-        verify(bookingRepository, never()).save(any());
-    }
-
-    @Test
-    void createBookingWithWrongDateTest2() {
-        LocalDateTime now = LocalDateTime.now();
-        User user1 = new User(1L, "Elon", "elon@spacex.com");
-        User user2 = new User(2L, "Bill", "bill@microsoft.com");
-        Item item = new Item(1L, "Перфоратор", "Мощный инструмент для ремонта", true, user1, null);
-        Booking booking = new Booking(1L, now.plusDays(2), now.plusDays(2), item, user2, BookingStatus.APPROVED);
-        BookingDto expectedBookingDto = BookingMapper.toBookingDto(booking);
-
-        assertThrows(BookingDateException.class, () -> bookingService.createBooking(expectedBookingDto, user2.getId()));
-        verify(bookingRepository, never()).save(any());
-    }
-
-    @Test
     void createBookingWithNotAvailableItemTest() {
         User user1 = new User(1L, "Elon", "elon@spacex.com");
         User user2 = new User(2L, "Bill", "bill@microsoft.com");
@@ -175,12 +143,6 @@ public class BookingServiceImplTest {
     }
 
     @Test
-    void approveBookingWithBlankFieldTest() {
-        assertThrows(BlankFieldException.class, () -> bookingService.approveBooking(1L, null, true));
-        verify(bookingRepository, never()).save(any());
-    }
-
-    @Test
     void approveAlreadyApprovedBookingTest() {
         User user = new User(1L, "Elon", "elon@spacex.com");
         Item item = new Item(1L, "Перфоратор", "Мощный инструмент для ремонта", true, user, null);
@@ -206,12 +168,6 @@ public class BookingServiceImplTest {
         BookingDto resultBookingDto = bookingService.getBookingById(booking.getId(), user.getId());
 
         assertEquals(expectedBookingDto, resultBookingDto);
-    }
-
-    @Test
-    void getBookingByIdWithBlankFieldTest() {
-        assertThrows(BlankFieldException.class, () -> bookingService.getBookingById(1L, null));
-        verify(bookingRepository, never()).save(any());
     }
 
     @Test

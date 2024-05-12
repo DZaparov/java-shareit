@@ -10,6 +10,8 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.booking.dto.BookItemRequestDto;
 import ru.practicum.shareit.booking.dto.BookingState;
 import ru.practicum.shareit.client.BaseClient;
+import ru.practicum.shareit.exception.BlankFieldException;
+import ru.practicum.shareit.exception.BookingDateException;
 
 import java.util.Map;
 
@@ -36,7 +38,10 @@ public class BookingClient extends BaseClient {
         return get("?state={state}&from={from}&size={size}", userId, parameters);
     }
 
-    public ResponseEntity<Object> getOwnerBookings(long userId, BookingState state, Integer from, Integer size) {
+    public ResponseEntity<Object> getOwnerBookings(Long userId, BookingState state, Integer from, Integer size) {
+        if (userId == null) {
+            throw new BlankFieldException("Заголовок X-Sharer-User-Id не должен быть пустым");
+        }
         Map<String, Object> parameters = Map.of(
                 "state", state.name(),
                 "from", from,
@@ -45,15 +50,33 @@ public class BookingClient extends BaseClient {
         return get("/owner?state={state}&from={from}&size={size}", userId, parameters);
     }
 
-    public ResponseEntity<Object> bookItem(long userId, BookItemRequestDto requestDto) {
+    public ResponseEntity<Object> bookItem(Long userId, BookItemRequestDto requestDto) {
+        if (userId == null) {
+            throw new BlankFieldException("Заголовок X-Sharer-User-Id не должен быть пустым");
+        }
+
+        if (requestDto.getEnd().isBefore(requestDto.getStart())) {
+            throw new BookingDateException("Дата конца бронирования раньше, чем дата начала бронирования");
+        }
+
+        if (requestDto.getEnd().isEqual(requestDto.getStart())) {
+            throw new BookingDateException("Дата конца бронирования совпадает с датой начала бронирования");
+        }
+
         return post("", userId, requestDto);
     }
 
-    public ResponseEntity<Object> getBooking(long userId, Long bookingId) {
+    public ResponseEntity<Object> getBooking(Long userId, Long bookingId) {
+        if (userId == null) {
+            throw new BlankFieldException("Заголовок X-Sharer-User-Id не должен быть пустым");
+        }
         return get("/" + bookingId, userId);
     }
 
-    public ResponseEntity<Object> approveBooking(Long bookingId, long userId, boolean approved) {
+    public ResponseEntity<Object> approveBooking(Long bookingId, Long userId, boolean approved) {
+        if (userId == null) {
+            throw new BlankFieldException("Заголовок X-Sharer-User-Id не должен быть пустым");
+        }
         return patch("/" + bookingId + "?approved=" + approved, userId);
     }
 }

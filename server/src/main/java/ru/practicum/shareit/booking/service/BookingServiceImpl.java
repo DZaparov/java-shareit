@@ -38,18 +38,6 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingDto createBooking(BookingDto bookingDto, Long userId) {
-        if (userId == null) {
-            throw new BlankFieldException("Заголовок X-Sharer-User-Id не должен быть пустым");
-        }
-
-        if (bookingDto.getEnd().isBefore(bookingDto.getStart())) {
-            throw new BookingDateException("Дата конца бронирования раньше, чем дата начала бронирования");
-        }
-
-        if (bookingDto.getEnd().isEqual(bookingDto.getStart())) {
-            throw new BookingDateException("Дата конца бронирования совпадает с датой начала бронирования");
-        }
-
         Item item = itemRepository.findById(bookingDto.getItemId()).orElseThrow(() ->
                 new NotFoundException("Вещь с идентификатором " + bookingDto.getItemId() + " не найдена."));
 
@@ -71,9 +59,6 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingDto approveBooking(Long id, Long ownerId, Boolean approved) {
-        if (ownerId == null) {
-            throw new BlankFieldException("Заголовок X-Sharer-User-Id не должен быть пустым");
-        }
         User user = userRepository.findById(ownerId).orElseThrow(() ->
                 new NotFoundException("Пользователь с идентификатором " + ownerId + " не найден."));
 
@@ -98,9 +83,6 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingDto getBookingById(Long id, Long userId) {
-        if (userId == null) {
-            throw new BlankFieldException("Заголовок X-Sharer-User-Id не должен быть пустым");
-        }
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new NotFoundException("Пользователь с идентификатором " + userId + " не найден."));
 

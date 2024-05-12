@@ -85,23 +85,6 @@ class UserControllerTest {
     }
 
     @Test
-    void createUserWithBadEmailTest() throws Exception {
-        UserDto userDto = new UserDto(
-                1L,
-                "John",
-                "mail.com");
-
-        when(userService.createUser(any())).thenReturn(userDto);
-
-        mvc.perform(post("/users")
-                        .content(mapper.writeValueAsString(userDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
     void deleteUserTest() throws Exception {
         mvc.perform(delete("/users/{id}", 1L)
                         .content(mapper.writeValueAsString(userDto))

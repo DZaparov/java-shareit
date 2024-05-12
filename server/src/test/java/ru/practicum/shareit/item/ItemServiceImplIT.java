@@ -60,7 +60,7 @@ public class ItemServiceImplIT {
                 itemDto2.getId(), null, null, null, BookingStatus.APPROVED);
 
         bookingDto1 = bookingService.createBooking(bookingDto1, userDto2.getId());
-        //bookingDto2 = bookingService.createBooking(bookingDto2, userDto2.getId());
+        bookingDto2 = bookingService.createBooking(bookingDto2, userDto2.getId());
         bookingDto3 = bookingService.createBooking(bookingDto3, userDto2.getId());
         bookingDto4 = bookingService.createBooking(bookingDto4, userDto2.getId());
         bookingDto5 = bookingService.createBooking(bookingDto5, userDto1.getId());
@@ -71,8 +71,9 @@ public class ItemServiceImplIT {
                 bookingDto3, bookingDto4, new ArrayList<>());
 
         List<ItemWithBookingDto> expected = new ArrayList<>();
-        expected.add(itemWithBookingDto1);
         expected.add(itemWithBookingDto2);
+        expected.add(itemWithBookingDto1);
+
 
         List<ItemWithBookingDto> result = itemService.listItemsOfUser(userDto1.getId(), 0, 10);
 

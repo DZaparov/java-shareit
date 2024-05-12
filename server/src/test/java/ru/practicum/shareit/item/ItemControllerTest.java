@@ -7,7 +7,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.practicum.shareit.exception.BlankFieldException;
 import ru.practicum.shareit.exception.ForbiddenException;
 import ru.practicum.shareit.exception.NotAvailableException;
 import ru.practicum.shareit.item.dto.CommentDto;
@@ -68,19 +67,6 @@ public class ItemControllerTest {
                 .andExpect(jsonPath("$.id", is(itemDto.getId()), Long.class))
                 .andExpect(jsonPath("$.name", is(itemDto.getName())))
                 .andExpect(jsonPath("$.description", is(itemDto.getDescription())));
-    }
-
-    @Test
-    void createItemWithNullHeaderTest() throws Exception {
-        when(itemService.createItem(any(), anyLong())).thenThrow(BlankFieldException.class);
-
-        mvc.perform(post("/items")
-                        .content(mapper.writeValueAsString(itemDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header("X-Sharer-User-Id", 0))
-                .andExpect(status().isBadRequest());
     }
 
     @Test

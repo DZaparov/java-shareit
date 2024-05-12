@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.ToString;
 import ru.practicum.shareit.user.dto.UserDto;
 
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Data
@@ -13,7 +12,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class CommentDto {
     private Long id;
-    @NotBlank
     private String text;
     private ItemDto item;
     private UserDto author;

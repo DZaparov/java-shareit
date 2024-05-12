@@ -6,7 +6,6 @@ import lombok.ToString;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.request.model.ItemRequest;
 
-import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Data
@@ -14,9 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ItemWithBookingDto {
     private Long id;
-    @NotBlank
     private String name;
-    @NotBlank
     private String description;
     private boolean available;
     private ItemRequest request;

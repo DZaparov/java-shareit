@@ -9,7 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import ru.practicum.shareit.exception.BlankFieldException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.dto.ItemMapper;
@@ -59,12 +58,6 @@ public class ItemRequestServiceImplTest {
 
         assertEquals(itemRequestDto, createdItemRequestDto);
         verify(itemRequestRepository, Mockito.times(1)).save(any());
-    }
-
-    @Test
-    void createItemRequestWithBlankFieldTest() {
-        assertThrows(BlankFieldException.class, () -> itemRequestService.createItemRequest(new ItemRequestDto(), null));
-        verify(itemRequestRepository, never()).save(any());
     }
 
     @Test

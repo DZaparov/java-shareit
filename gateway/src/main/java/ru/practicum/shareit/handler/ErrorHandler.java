@@ -6,6 +6,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.practicum.shareit.exception.BlankFieldException;
+import ru.practicum.shareit.exception.BookingDateException;
 import ru.practicum.shareit.exception.UnsupportedStatusException;
 
 import javax.validation.ConstraintViolationException;
@@ -39,6 +41,20 @@ public class ErrorHandler {
     public ErrorResponse handleThrowable(final Throwable e) {
         log.info("{} {}", HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST) //400
+    public ErrorResponse handleBlankFieldException(final BlankFieldException e) {
+        log.info("{} {}", HttpStatus.BAD_REQUEST, e.getMessage());
+        return new ErrorResponse(HttpStatus.BAD_REQUEST.toString(), e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST) //400
+    public ErrorResponse handleBookingDateException(final BookingDateException e) {
+        log.info("{} {}", HttpStatus.BAD_REQUEST, e.getMessage());
+        return new ErrorResponse(HttpStatus.BAD_REQUEST.toString(), e.getMessage());
     }
 }
 

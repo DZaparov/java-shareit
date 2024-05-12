@@ -29,13 +29,6 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST) //400
-    public ErrorResponse handleBookingDateException(final BookingDateException e) {
-        log.info("{} {}", HttpStatus.BAD_REQUEST, e.getMessage());
-        return new ErrorResponse(HttpStatus.BAD_REQUEST.toString(), e.getMessage());
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST) //400
     public ErrorResponse handleUnsupportedStatusException(final UnsupportedStatusException e) {
         log.info("{} {}", "Unknown state: UNSUPPORTED_STATUS", e.getMessage());
         return new ErrorResponse("Unknown state: UNSUPPORTED_STATUS", e.getMessage());
@@ -60,13 +53,6 @@ public class ErrorHandler {
     public ErrorResponse handleNotFoundException(final NotFoundException e) {
         log.info("{} {}", HttpStatus.NOT_FOUND, e.getMessage());
         return new ErrorResponse(HttpStatus.NOT_FOUND.toString(), e.getMessage());
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST) //400
-    public ErrorResponse handleBlankFieldException(final BlankFieldException e) {
-        log.info("{} {}", HttpStatus.BAD_REQUEST, e.getMessage());
-        return new ErrorResponse(HttpStatus.BAD_REQUEST.toString(), e.getMessage());
     }
 
     @ExceptionHandler

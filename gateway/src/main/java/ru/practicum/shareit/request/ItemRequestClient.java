@@ -8,6 +8,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.client.BaseClient;
+import ru.practicum.shareit.exception.BlankFieldException;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 
 import java.util.Map;
@@ -27,15 +28,24 @@ public class ItemRequestClient extends BaseClient {
     }
 
     public ResponseEntity<Object> createItemRequest(ItemRequestDto itemRequestDto, Long ownerId) {
+        if (ownerId == null) {
+            throw new BlankFieldException("Заголовок X-Sharer-User-Id не должен быть пустым");
+        }
         return post("", ownerId, itemRequestDto);
     }
 
 
     public ResponseEntity<Object> getMyItemRequests(Long ownerId) {
+        if (ownerId == null) {
+            throw new BlankFieldException("Заголовок X-Sharer-User-Id не должен быть пустым");
+        }
         return get("", ownerId);
     }
 
     public ResponseEntity<Object> getUserItemRequests(Long userId, int from, int size) {
+        if (userId == null) {
+            throw new BlankFieldException("Заголовок X-Sharer-User-Id не должен быть пустым");
+        }
         Map<String, Object> parameters = Map.of(
                 "from", from,
                 "size", size
@@ -44,6 +54,9 @@ public class ItemRequestClient extends BaseClient {
     }
 
     public ResponseEntity<Object> getItemRequestById(Long id, Long userId) {
+        if (userId == null) {
+            throw new BlankFieldException("Заголовок X-Sharer-User-Id не должен быть пустым");
+        }
         return get("/" + id, userId);
     }
 }
